@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { AppContext } from '../Context/AppContext'
 import { assets } from '../assets/assets_frontend/assets'
+import RelatedDoctors from '../components/RelatedDoctors'
 
 const Appointment = () => {
 
@@ -54,18 +55,18 @@ const getAvailableSlots = async ()=> {
         endtime.setHours(21,0,0,0)
 
         //Seeting hours
-        if(today.getDate() === currentdate.getDate())
-        {
-             currentdate.setHours(currentdate.getHours() > 10 ? currentdate.getHours() +1 : 10  )
-             currentdate.setMinutes(currentdate.getMinutes() >30 ? 30 : 0 )
-
-        }
-        else
-        {
-          currentdate.setHours(10)
-          currentdate.setMinutes(0)
-
-        }
+        if (today.getDate() === currentdate.getDate()) {
+          let now = new Date();
+          let minutes = now.getMinutes();
+          now.setMinutes(minutes > 30 ? 0 : 30);
+          if (minutes > 30) now.setHours(now.getHours() + 1);
+      
+          now.setSeconds(0);
+          now.setMilliseconds(0);
+          currentdate.setHours(now.getHours(), now.getMinutes(), 0, 0);
+      } else {
+          currentdate.setHours(10, 0, 0, 0);
+      }
 
         let timeSlots = []
 
@@ -204,6 +205,11 @@ useEffect(()=> {
          
 
         </div>
+
+        {/* Listing  Related Doctors */}
+        <RelatedDoctors docId={docId} speciality={docInfo.speciality}/>
+
+        
 
 
     </div>
